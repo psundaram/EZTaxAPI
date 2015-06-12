@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection properties - Driver, URL, user, password -->
+         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://10.2.2.118:3306/billing</property>
+        <property name="hibernate.connection.username">billing</property>
+        <property name="hibernate.connection.password">bi**i&amp;&amp;</property>
+        <property name="show_sql">true</property>
+         
+        <!-- org.hibernate.HibernateException: No CurrentSessionContext configured! -->
+        <property name="hibernate.current_session_context_class">thread</property>
+         
+        <!-- Mapping with model class containing annotations -->
+        <mapping class="com.anpi.domain.Summary"/>
+          <mapping class="com.anpi.app.model.InvoiceAddress"/>
+             <mapping class="com.anpi.app.model.TaxService"/>
+                 <mapping class="com.anpi.app.model.TaxMaster"/>
+                     <mapping class="com.anpi.app.model.TaxServiceMaster"/>
+                       <mapping class="com.anpi.app.model.TaxInvoiceSummary"/>
+                      <!--   <mapping class="com.anpi.app.model.CustomerPaymentType"/>
+                         <mapping class="com.anpi.app.model.CCDues"/> -->
+                         <mapping class="com.anpi.domain.CCChargeResponse"/>
+                         <mapping class="com.anpi.app.model.BillingGroup"/>
+                         <mapping class="com.anpi.app.model.Customer"/>
+                         <mapping class="com.anpi.app.model.BillingDocument"/>
+                         <mapping class="com.anpi.app.model.InvoicePaymentLog"/>
+    </session-factory>
+</hibernate-configuration>
