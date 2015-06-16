@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -116,7 +117,19 @@ public class TaxInvoiceSummary {
 	private Date createdDate;
 	@Column(name="updated_date")
 	private Date updatedDate;
+	@Column(name="mail_sent")
+	private int mailSent;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="customer_id",insertable=false,updatable=false)
+	private Customer customer;
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 	
 	public int getId() {
 		return id;
@@ -321,6 +334,12 @@ public class TaxInvoiceSummary {
 	}
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+	public int getMailSent() {
+		return mailSent;
+	}
+	public void setMailSent(int mailSent) {
+		this.mailSent = mailSent;
 	}
 
 }

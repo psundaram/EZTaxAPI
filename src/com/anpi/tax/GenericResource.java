@@ -6,7 +6,6 @@ package com.anpi.tax;
 
 import java.io.StringWriter;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,35 +17,28 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import billsoft.eztax.CustomerType;
 import billsoft.eztax.TaxData;
 
-import com.anpi.app.model.InvoiceAddress;
 import com.anpi.app.model.TaxInvoice;
-import com.anpi.app.model.TaxService;
-import com.anpi.app.model.TaxServiceMaster;
+import com.anpi.app.model.TaxInvoiceSummary;
 import com.anpi.app.util.DateUtil;
 import com.anpi.app.util.DbConnect;
 import com.anpi.app.util.HibernateUtil;
-import com.anpi.domain.Address;
-import com.anpi.domain.CustomerInfo;
 import com.anpi.domain.Summary;
 import com.anpi.domain.TaxObject;
 import com.anpi.domain.TaxProperty;
 import com.anpi.domain.TaxRequestType;
-import com.anpi.domain.TaxRequestTypes;
 import com.anpi.domain.Taxitem;
 import com.anpi.util.TaxUtil;
 import com.google.gson.Gson;
@@ -287,6 +279,29 @@ public class GenericResource {
 		HibernateUtil.getSessionAnnotationFactory().close();
 		return "Tax calculated";
     }
+    
+    @Path("/calcCC")
+    @GET
+    @Produces("application/xml") 
+    public String calculateCC(@QueryParam("date") String date) throws Exception  {
+    	System.out.println("Date:"+date);
+    	 Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
+			new CreditChargeCalculation().retrieveTax(session,date);
+//			HibernateUtil.getSessionAnnotationFactory().close();
+			return "CC Charge calculated";
+    }
+    
+    @Path("/sendMail")
+    @GET
+    @Produces("application/xml") 
+    public String sendMail(@QueryParam("date") String date) throws Exception  {
+		System.out.println("Date:" + date);
+		Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
+		List<TaxInvoiceSummary> listOfTaxInvoiceSummaries = new SendInvoice().retrieveTaxInfo(session, date);
+		String response = new SendInvoice().sendMail(listOfTaxInvoiceSummaries);
+		System.out.println("response: " + response);
+		return response;
+    }
    
     private String calculateTax(String content) throws Exception {
     	 TaxObject taxObject = new CalculateTax().generateTax(content);
@@ -308,14 +323,6 @@ public class GenericResource {
          return sw.toString();
 	}
 
-    @Path("/cc_charge")
-    @GET
-    private void ccChargeCalculation(String date) throws Exception {
-     Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
-		new CreditChargeCalculation().retrieveTax(session,date);
-		HibernateUtil.getSessionAnnotationFactory().close();
-    }
-    
     
 	public static void main(String[] args) throws Exception {
 //		new GenericResource().calculateTax();

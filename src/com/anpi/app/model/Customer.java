@@ -8,92 +8,95 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="t_customer")
+@Table(name = "vw_customer")
 public class Customer {
 	@Id
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="customer_id")
+	@Column(name = "customer_id")
 	private String customerId;
-	
-	@Column(name="customer_name")
+
+	@Column(name = "customer_name")
 	private String customerName;
-	
-	@Column(name="partner_id")
+
+	@Column(name = "partner_id")
 	private String partnerId;
-	
-	@Column(name="agent_id")
+
+	@Column(name = "partner_name")
+	private String partnerName;
+
+	@Column(name = "partner_type")
+	private String partnerType;
+
+	@Column(name = "agent_id")
 	private String agentId;
-	
-	@Column(name="sales_rep_id")
+
+	@Column(name = "sales_rep_id")
 	private String salesRepId;
-	
-	@Column(name="contact_id")
+
+	@Column(name = "contact_id")
 	private String contactId;
-	
-	@Column(name="customer_source")
+
+	@Column(name = "customer_source")
 	private String customerSource;
-	
-	@Column(name="billing_group_id")
+
+	@Column(name = "billing_group_id")
 	private String billingGroupId;
-	
-	@Column(name="billing_start_date")
-	private Date billingStartDate;
-	
-	@Column(name="active")
+
+	@Column(name = "billing_date")
+	private Date billingDate;
+
+	@Column(name = "crm_customer_id")
+	private String crmCCustomerId;
+
+	@Column(name = "crm_partner_id")
+	private String crmPartnerId;
+
+	@Column(name = "active")
 	private String active;
-	
-	@Column(name="end_date")
+
+	@Column(name = "end_date")
 	private Date endDate;
-	
-	@Column(name="home_country")
-	private String country;
-	
-	@Column(name="currency")
+
+	@Column(name = "home_country")
+	private String homeCountry;
+
+	@Column(name = "currency")
 	private String currency;
-	
-	@Column(name="demo_ind")
-	private String demoId;
-	
-	@Column(name="created_date")
-	private Date createdDate; 
-	
-	@Column(name="updated_date")
-	private Date updatedDate;
-	
-	@Column(name="created_by")
+
+	@Column(name = "bill_type")
+	private String billType;
+
+	@Column(name = "created_date")
+	private Date createdDate;
+
+	@Column(name = "created_by")
 	private String createdBy;
-	
-	@Column(name="updated_by")
-	private String updatedBy;
-	
-	@Column(name="external_ref_id1")
-	private String externalRefId1;
-	
-	@Column(name="external_ref_id2")
-	private String externalRefId2;
-	
-	@Column(name="external_ref_id3")
-	private String externalRefId3;
-	
-	@Column(name="custom_attribute1")
-	private String customAttribute1;
-	
-	@Column(name="custom_attribute2")
-	private String customAttribute2;
-	
-//	@ManyToOne(optional=false)
-//	@JoinColumn(name="billing_group_id" ,insertable=false, updatable=false)
-//	private BillingGroup billingGroup;
 
-	public int getId() {
-		return id;
-	}
+	@Column(name = "fname")
+	private String fname;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+	@Column(name = "lname")
+	private String lname;
+
+	@Column(name = "address2")
+	private String address2;
+
+	@Column(name = "city")
+	private String city;
+
+	@Column(name = "state")
+	private String state;
+
+	@Column(name = "zip")
+	private String zip;
+
+	@Column(name = "country")
+	private String country;
+
+	@Column(name = "phone")
+	private String phone;
+
+	@Column(name = "email")
+	private String email;
 
 	public String getCustomerId() {
 		return customerId;
@@ -159,14 +162,6 @@ public class Customer {
 		this.billingGroupId = billingGroupId;
 	}
 
-	public Date getBillingStartDate() {
-		return billingStartDate;
-	}
-
-	public void setBillingStartDate(Date billingStartDate) {
-		this.billingStartDate = billingStartDate;
-	}
-
 	public String getActive() {
 		return active;
 	}
@@ -199,28 +194,12 @@ public class Customer {
 		this.currency = currency;
 	}
 
-	public String getDemoId() {
-		return demoId;
-	}
-
-	public void setDemoId(String demoId) {
-		this.demoId = demoId;
-	}
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
 	}
 
 	public String getCreatedBy() {
@@ -231,62 +210,123 @@ public class Customer {
 		this.createdBy = createdBy;
 	}
 
-	public String getUpdatedBy() {
-		return updatedBy;
+	public String getPartnerName() {
+		return partnerName;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
 	}
 
-	public String getExternalRefId1() {
-		return externalRefId1;
+	public String getPartnerType() {
+		return partnerType;
 	}
 
-	public void setExternalRefId1(String externalRefId1) {
-		this.externalRefId1 = externalRefId1;
+	public void setPartnerType(String partnerType) {
+		this.partnerType = partnerType;
 	}
 
-	public String getExternalRefId2() {
-		return externalRefId2;
+	public Date getBillingDate() {
+		return billingDate;
 	}
 
-	public void setExternalRefId2(String externalRefId2) {
-		this.externalRefId2 = externalRefId2;
+	public void setBillingDate(Date billingDate) {
+		this.billingDate = billingDate;
 	}
 
-	public String getExternalRefId3() {
-		return externalRefId3;
+	public String getCrmCCustomerId() {
+		return crmCCustomerId;
 	}
 
-	public void setExternalRefId3(String externalRefId3) {
-		this.externalRefId3 = externalRefId3;
+	public void setCrmCCustomerId(String crmCCustomerId) {
+		this.crmCCustomerId = crmCCustomerId;
 	}
 
-	public String getCustomAttribute1() {
-		return customAttribute1;
+	public String getCrmPartnerId() {
+		return crmPartnerId;
 	}
 
-	public void setCustomAttribute1(String customAttribute1) {
-		this.customAttribute1 = customAttribute1;
+	public void setCrmPartnerId(String crmPartnerId) {
+		this.crmPartnerId = crmPartnerId;
 	}
 
-	public String getCustomAttribute2() {
-		return customAttribute2;
+	public String getHomeCountry() {
+		return homeCountry;
 	}
 
-	public void setCustomAttribute2(String customAttribute2) {
-		this.customAttribute2 = customAttribute2;
+	public void setHomeCountry(String homeCountry) {
+		this.homeCountry = homeCountry;
 	}
 
-//	public BillingGroup getBillingGroup() {
-//		return billingGroup;
-//	}
-//
-//	public void setBillingGroup(BillingGroup billingGroup) {
-//		this.billingGroup = billingGroup;
-//	}
-	
-	
+	public String getBillType() {
+		return billType;
+	}
 
+	public void setBillType(String billType) {
+		this.billType = billType;
+	}
+
+	public String getFname() {
+		return fname;
+	}
+
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+
+	public String getLname() {
+		return lname;
+	}
+
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

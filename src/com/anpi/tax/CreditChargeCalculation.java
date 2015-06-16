@@ -10,7 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Query;
@@ -46,7 +50,7 @@ public class CreditChargeCalculation {
 	public static void main(String[] args) throws Exception {
 		
 		Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
-		new CreditChargeCalculation().retrieveTax(session,"12/06/2012");
+		new CreditChargeCalculation().retrieveTax(session,"01/04/2015");
 	}
 	
 	public String callAPI(String request) throws Exception {
@@ -83,12 +87,13 @@ public class CreditChargeCalculation {
 	public void  retrieveTax(Session session,String date) throws Exception {
 		
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
-		Date convertedDate = (Date) format.parse(date);
-		System.out.println(convertedDate);
+		Date convertedDate = new Date();
 		String hql = null;
 		Transaction transaction =  session.beginTransaction();
 		if(!Strings.isNullOrEmpty(date)){
-			 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.id = :id   and bill_type='CreditCard'"+
+			 convertedDate = (Date) format.parse(date);
+			System.out.println(convertedDate);
+			 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.billFrom = :date   and bill_type='CreditCard'"+
 						"and payment_status='UP'";
 		}else{
 		 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and bill_type='CreditCard'"+
@@ -102,8 +107,10 @@ public class CreditChargeCalculation {
 //		"and payment_status='UP'";
 		
 		Query query = session.createQuery(hql);
-		query.setParameter("id", 18);
-		query.setMaxResults(1);
+		if(!Strings.isNullOrEmpty(date)){
+			query.setDate("date", convertedDate);
+		}
+//		query.setMaxResults(1);
 		List<Object[]> list = query.list();
 		System.out.println(list.size());
         for(Object[] arr : list){
