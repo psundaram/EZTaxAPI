@@ -4,8 +4,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import com.mysql.jdbc.Connection;
 
@@ -15,6 +13,7 @@ public class DbConnect {
 		Connection connection_mysql = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+//			connection_mysql = (Connection) DriverManager.getConnection("jdbc:mysql://10.2.2.93:3306/billing", "mysqladmin", "My5q1adm1n");
 			connection_mysql = (Connection) DriverManager.getConnection("jdbc:mysql://10.2.2.118:3306/billing", "billing", "bi**i&&");
 		} catch (Exception e) {
 			e.printStackTrace();

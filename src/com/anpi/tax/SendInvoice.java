@@ -36,7 +36,7 @@ public class SendInvoice {
 		Date convertedDate = new Date();
 		Criteria criteria = session.createCriteria(TaxInvoiceSummary.class);
 		criteria.add(Restrictions.eq("mailSent", 0));
-//		criteria.setMaxResults(1);
+		criteria.setMaxResults(10);
 		if(!Strings.isNullOrEmpty(billDate)){
 			 convertedDate = (Date) format.parse(billDate);
 			 criteria.add(Restrictions.le("billTo",convertedDate));

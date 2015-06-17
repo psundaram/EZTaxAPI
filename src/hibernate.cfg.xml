@@ -7,9 +7,14 @@
         <!-- Database connection properties - Driver, URL, user, password -->
          <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        
         <property name="hibernate.connection.url">jdbc:mysql://10.2.2.118:3306/billing</property>
         <property name="hibernate.connection.username">billing</property>
         <property name="hibernate.connection.password">bi**i&amp;&amp;</property>
+        
+        <!--  <property name="hibernate.connection.url">jdbc:mysql://10.2.2.93:3306/billing</property>
+        <property name="hibernate.connection.username">mysqladmin</property>
+        <property name="hibernate.connection.password">My5q1adm1n</property> -->
         <property name="show_sql">true</property>
          
         <!-- org.hibernate.HibernateException: No CurrentSessionContext configured! -->

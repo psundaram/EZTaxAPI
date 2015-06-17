@@ -10,12 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,11 +41,6 @@ public class CreditChargeCalculation {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception {
-		
-		Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
-		new CreditChargeCalculation().retrieveTax(session,"01/04/2015");
-	}
 	
 	public String callAPI(String request) throws Exception {
 		System.out.println("REquest: "+ request);
@@ -83,34 +72,58 @@ public class CreditChargeCalculation {
 		return response;
 		
 	}
+	
+	public static void main(String[] args) throws Exception {
+		Session session = HibernateUtil.getSessionAnnotationFactory().getCurrentSession();
+		new CreditChargeCalculation().retrieveTax(session,"01/04/2015",null,"1");
+	}
 
-	public void  retrieveTax(Session session,String date) throws Exception {
-		
+	public void  retrieveTax(Session session,String date,String toDate,String value) throws Exception {
+		boolean isMonth = false;
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy");
 		Date convertedDate = new Date();
+		 Date tobillDate = new Date();
 		String hql = null;
 		Transaction transaction =  session.beginTransaction();
 		if(!Strings.isNullOrEmpty(date)){
 			 convertedDate = (Date) format.parse(date);
-			System.out.println(convertedDate);
-			 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.billFrom = :date   and bill_type='CreditCard'"+
+			 System.out.println(convertedDate);
+			 if(!Strings.isNullOrEmpty(toDate)){
+				  tobillDate = (Date) format.parse(toDate);
+				  hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.billTo BETWEEN :date AND :toDate  and bill_type='CreditCard'"+
 						"and payment_status='UP'";
-		}else{
+			 }else if(!Strings.isNullOrEmpty(value)){
+				 if(value.equals("1")){
+					 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.billTo >= :date   and bill_type='CreditCard'"+
+								"and payment_status='UP'"; 
+				 }else{
+					 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and t.billTo <= :date   and bill_type='CreditCard'"+
+								"and payment_status='UP'"; 
+				 }
+			 }else{
+				 
+				 int month = convertedDate.getMonth()+1;
+				 
+				 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and month(t.billTo) = "+month+" and bill_type='CreditCard'"+
+							"and payment_status='UP'";
+				 isMonth = true;
+			 }
+		}
+		else{
 		 hql = "from TaxInvoiceSummary t,BillingGroup b where t.billingGroupId = b.billingGroupId and bill_type='CreditCard'"+
 		"and payment_status='UP'";
 		}
 
-//		String hql = "from billing.t_invoice_summary as a, billing.t_billing_group as b"+
-//		"where a.billing_group_id = b.billing_group_id "+
-//		"and a.billed_from = '2015-05-01'"+
-//		"and bill_type='CreditCard' and auto_pay='Y'" +
-//		"and payment_status='UP'";
-		
+		System.out.println("hql:"+hql);
 		Query query = session.createQuery(hql);
-		if(!Strings.isNullOrEmpty(date)){
+		if(!isMonth && !Strings.isNullOrEmpty(date)){
 			query.setDate("date", convertedDate);
+			if(!Strings.isNullOrEmpty(toDate)){
+				query.setDate("toDate", tobillDate);
+			}
 		}
-//		query.setMaxResults(1);
+		
+		query.setMaxResults(1);
 		List<Object[]> list = query.list();
 		System.out.println(list.size());
         for(Object[] arr : list){
@@ -127,7 +140,7 @@ public class CreditChargeCalculation {
 				int number = generateRandomNumbers();
 				System.out.println("Random "+ number);
 				order.setRetryTrace(number);
-				order.setAmount(String.valueOf(taxInvoiceSummary.getPartnerTotalBill()));
+				order.setAmount(String.valueOf(taxInvoiceSummary.getTotalBill()));
 				request.setOrder(order);
 				request.setProfile(profile);
 				
@@ -157,7 +170,7 @@ public class CreditChargeCalculation {
 					invoicePaymentLog.setBilledFrom(taxInvoiceSummary.getBillFrom());
 					invoicePaymentLog.setBilledTo(taxInvoiceSummary.getBillTo());
 					invoicePaymentLog.setAccountNumber(billingGroup.getAccountNumber());
-					invoicePaymentLog.setInvoiceAmount(taxInvoiceSummary.getPartnerTotalBill());
+					invoicePaymentLog.setInvoiceAmount(taxInvoiceSummary.getTotalBill());
 					invoicePaymentLog.setCustomerId(taxInvoiceSummary.getCustomerId());
 					invoicePaymentLog.setPaymentType(billingGroup.getBillType());
 					invoicePaymentLog.setPaymentRefId(response.getGatewayTransactionReferenceNumber());
@@ -168,7 +181,7 @@ public class CreditChargeCalculation {
 					invoicePaymentLog.setName(billingGroup.getNameOnCard());
 					invoicePaymentLog.setRoutingNumber(billingGroup.getRoutingNumber());
 					invoicePaymentLog.setBankName(billingGroup.getBankName());
-					invoicePaymentLog.setAttemptedAmount(taxInvoiceSummary.getPartnerTotalBill());
+					invoicePaymentLog.setAttemptedAmount(taxInvoiceSummary.getTotalBill());
 					invoicePaymentLog.setAuthCode(response.getAuthorizationCode());
 					invoicePaymentLog.setProviderName("CHASE");
 					// TODO
@@ -185,7 +198,7 @@ public class CreditChargeCalculation {
 				}
 //				System.exit(0);
 			}
-        transaction.commit();
+        session.getTransaction().commit();
 	}
 
 }

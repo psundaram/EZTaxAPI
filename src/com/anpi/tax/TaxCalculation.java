@@ -240,7 +240,7 @@ public class TaxCalculation {
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			jaxbMarshaller.marshal(taxObject, sw);
 			System.out.println("output => " + sw);
-			 TaxObject taxObject1 = new CalculateTax().generateTax(sw.toString());
+//			 TaxObject taxObject1 = new CalculateTax().generateTax(sw.toString());
 			return sw.toString();
 			
 
